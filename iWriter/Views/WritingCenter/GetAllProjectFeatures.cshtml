@@ -1,0 +1,35 @@
+﻿@model IEnumerable<iWriter.ViewModels.FeatureViewModels.FeatureViewModel>
+
+<p>
+    <a asp-action="CreateFeatures">Create New Features</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FeatureId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FeatureText)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FeatureId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FeatureText)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.FeatureId }) |
+                @Html.ActionLink("Details", "FeatureDetails", new { id = item.FeatureId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.FeatureId })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

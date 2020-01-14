@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <UserSecretsId>aspnet-iWriter-E5553CF4-A580-47D1-A7FF-D41C264E60CA</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20200103140703_IdentityExtended.cs" />
+    <Compile Remove="Migrations\20200103140703_IdentityExtended.Designer.cs" />
+    <Compile Remove="Migrations\20200103142222_IdentityExtended.cs" />
+    <Compile Remove="Migrations\20200103142222_IdentityExtended.Designer.cs" />
+    <Compile Remove="Migrations\20200103142514_IdentityExtended.cs" />
+    <Compile Remove="Migrations\20200103142514_IdentityExtended.Designer.cs" />
+    <Compile Remove="Migrations\20200109101409_ProjectTypes.cs" />
+    <Compile Remove="Migrations\20200109101409_ProjectTypes.Designer.cs" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" />
+  </ItemGroup>
+
+</Project>
