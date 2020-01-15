@@ -15,12 +15,45 @@
 
 <!-- Tab panes -->
 <div class="tab-content">
-    <div class="tab-pane active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">1</div>
-    <div class="tab-pane" id="projectManagement" role="tabpanel" aria-labelledby="profile-tab">2</div>
+    <div class="tab-pane active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab"></div>
+    <div class="tab-pane" id="projectManagement" role="tabpanel" aria-labelledby="profile-tab"></div>
 </div>
 
 @section Scripts {
-    <scipt>
+    
+    @{ 
         
-    </scipt>
+    }
+    
+    <script>
+
+        $('[data-toggle="tab"]').click(function(e) {
+            // extract useful data
+            var $this = $(this),
+                loadurl = $this.attr('href'),
+                targ = $this.attr('data-target');
+
+            localStorage.setItem("activeTab", targ);
+
+            // show the pane
+            $this.tab('show');
+
+            $(targ).html('loading...');
+
+            $.get(loadurl, function(data) {
+                $(targ).html(data);
+            });
+            return false;
+        });
+
+        $(document).ready(function () {
+            var activeTab = localStorage.getItem("activeTab");
+            if (activeTab == null) {
+                $('[data-toggle="tab"]:first').click();
+            } else {
+                $('[data-toggle="tab"][data-target="' + activeTab + '"]').click();
+            }
+        });
+    </script>
+
 }

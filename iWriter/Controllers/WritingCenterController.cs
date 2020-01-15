@@ -92,7 +92,6 @@ namespace iWriter.Controllers
         }
 
 
-
         /********************************* Actions for Tab Action Views ************************************/
         [HttpGet]
         public async Task<IActionResult> Dashboard()
@@ -121,6 +120,12 @@ namespace iWriter.Controllers
             };
 
             return PartialView(model);
+        }
+
+        [HttpGet]
+        public IActionResult ProjectManagement()
+        {
+            return PartialView();
         }
     }
 }
