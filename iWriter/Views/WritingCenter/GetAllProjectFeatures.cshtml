@@ -1,8 +1,4 @@
 ﻿@model IEnumerable<iWriter.ViewModels.FeatureViewModels.FeatureViewModel>
-
-<p>
-    <a asp-action="CreateFeatures">Create New Features</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -25,7 +21,7 @@
                 @Html.DisplayFor(modelItem => item.FeatureText)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.FeatureId }) |
+                @Html.ActionLink("Edit", "EditFeature", new { id = item.FeatureId }) |
                 @Html.ActionLink("Details", "FeatureDetails", new { id = item.FeatureId }) |
                 @Html.ActionLink("Delete", "Delete", new { id = item.FeatureId })
             </td>

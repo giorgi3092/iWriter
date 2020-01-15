@@ -1,0 +1,36 @@
+﻿@model iWriter.ViewModels.FeatureViewModels.FeatureViewModel
+
+@{
+    ViewData["Title"] = "EditFeature";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>EditFeature</h1>
+
+<h4>FeatureViewModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditFeature">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="FeatureId" class="control-label"></label>
+                <input asp-for="FeatureId" class="form-control" />
+                <span asp-validation-for="FeatureId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FeatureText" class="control-label"></label>
+                <input asp-for="FeatureText" class="form-control" />
+                <span asp-validation-for="FeatureText" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

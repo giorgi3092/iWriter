@@ -70,7 +70,7 @@ namespace iWriter.Controllers
                 var model = mapper.Map<Feature>(createFeatureViewModel);
                 featureUnitOfWorkRepository.featureRepository.Add(model);
                 featureUnitOfWorkRepository.Save();
-                return RedirectToAction("Index", "WritingCenter", "v-pills-PROJECT-ADMINISTRATION");
+                return RedirectToAction("Index", "WritingCenter");
             }
             catch(InvalidOperationException ex)
             {
@@ -85,6 +85,13 @@ namespace iWriter.Controllers
         }
 
         public async Task<IActionResult> FeatureDetails(int id)
+        {
+            var model = await featureUnitOfWorkRepository.featureRepository.GetFeature(id);
+            var vm = mapper.Map<FeatureViewModel>(model);
+            return View(vm);
+        }
+
+        public async Task<IActionResult> EditFeature(int id)
         {
             var model = await featureUnitOfWorkRepository.featureRepository.GetFeature(id);
             var vm = mapper.Map<FeatureViewModel>(model);

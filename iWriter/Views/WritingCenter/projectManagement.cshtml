@@ -1,5 +1,9 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿<h3>Features</h3>
+<div id="projectFeaturesIndex"></div>
+<div id="projectFeaturesCreate"></div>
 
-projectManagement file
+
+<script>
+    $('#projectFeaturesIndex').load("/WritingCenter/GetAllProjectFeatures");
+    $('#projectFeaturesCreate').load("/WritingCenter/CreateFeatures");
+</script>
