@@ -44,75 +44,10 @@ namespace iWriter.Controllers
             return View();
         }
 
-        // chooses a partial view according to the tab selected
-        [HttpPost]
-        public async Task<IActionResult> RequestPartialView(string userId, string viewName)
-        {
-            if(await userManager.FindByIdAsync(userId) == null || viewName == null)
-            {
-                return View("Error");
-            }
-
-            var user = await userManager.GetUserAsync(User);
-
-            // current user's manager
-            var usersManager = await userManager.FindByIdAsync(user.AccountManagerID);
-
-            object model;
-
-            switch(viewName)
-            {
-                case "DashBoard":
-                    model = new DashBoardViewModel
-                    {
-                        Name = user.Name,
-                        AccountId = user.Id,
-                        AccountBalance = user.AccountBalance,
-                        AccountManagerName = usersManager.Name,
-                        AccountType = user.AccountType,
-                        CompletedProjectsCount = user.CompletedProjectsCount,
-                        LatestProjectID = user.LatestProjectID,
-                        NewProjectsCount = user.NewProjectsCount,
-                        PendingProjectsCount = user.PendingProjectsCount,
-                        TicketCount = user.TicketCount,
-                        TicketReplyCount = user.TicketReplyCount,
-                        Birthday = user.Birthday,
-                        JoinDate = user.JoinDate,
-                        LastLogin = user.LastLogin
-                    };
-                    return PartialView(viewName, model);
-                    break;
-                case "ProjectAdministration":
-                    return PartialView("ProjectAdministration");
-                    break;
-                default:
-                    model = new DashBoardViewModel
-                    {
-                        Name = user.Name,
-                        AccountId = user.Id,
-                        AccountBalance = user.AccountBalance,
-                        AccountManagerName = usersManager.Name,
-                        AccountType = user.AccountType,
-                        CompletedProjectsCount = user.CompletedProjectsCount,
-                        LatestProjectID = user.LatestProjectID,
-                        NewProjectsCount = user.NewProjectsCount,
-                        PendingProjectsCount = user.PendingProjectsCount,
-                        TicketCount = user.TicketCount,
-                        TicketReplyCount = user.TicketReplyCount,
-                        Birthday = user.Birthday,
-                        JoinDate = user.JoinDate,
-                        LastLogin = user.LastLogin
-                    };
-                    return PartialView(viewName, model);
-                    break;
-
-            }
-
-            return PartialView(viewName, model);
-        }
+        
 
 
-        /************************************** MANAGER/ADMIN ONLY **********************************/
+        /************************************** MANAGER/ADMIN ONLY - Features & Project Types **********************************/
         [HttpGet]
         public IActionResult GetAllProjectFeatures()
         {
@@ -154,6 +89,38 @@ namespace iWriter.Controllers
             var model = await featureUnitOfWorkRepository.featureRepository.GetFeature(id);
             var vm = mapper.Map<FeatureViewModel>(model);
             return View(vm);
+        }
+
+
+
+        /********************************* Actions for Tab Action Views ************************************/
+        [HttpGet]
+        public async Task<IActionResult> Dashboard()
+        {
+            var user = await userManager.GetUserAsync(User);
+
+            // current user's manager
+            var usersManager = await userManager.FindByIdAsync(user.AccountManagerID);
+
+            var model = new DashBoardViewModel
+            {
+                Name = user.Name,
+                AccountId = user.Id,
+                AccountBalance = user.AccountBalance,
+                AccountManagerName = usersManager.Name,
+                AccountType = user.AccountType,
+                CompletedProjectsCount = user.CompletedProjectsCount,
+                LatestProjectID = user.LatestProjectID,
+                NewProjectsCount = user.NewProjectsCount,
+                PendingProjectsCount = user.PendingProjectsCount,
+                TicketCount = user.TicketCount,
+                TicketReplyCount = user.TicketReplyCount,
+                Birthday = user.Birthday,
+                JoinDate = user.JoinDate,
+                LastLogin = user.LastLogin
+            };
+
+            return PartialView(model);
         }
     }
 }

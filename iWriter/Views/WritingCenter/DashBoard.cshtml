@@ -1,81 +1,80 @@
 ﻿@model DashBoardViewModel
-
 @*
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
 
-    <div class="card text-center">
-        <div class="card-header">
-            Writing Center Dashboard
-        </div>
-        <div class="card-body text-left">
-            <table class="table table-sm">
-                <tbody>
-                    <tr>
-                        <th scope="row">Name:</th>
-                        <td>@Model.Name</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Account ID:</th>
-                        <td>@Model.AccountId</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Account Type:</th>
-                        <td>@Model.AccountType</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Last Login Date:</th>
-                        <td>@Model.LastLogin</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Join Date:</th>
-                        <td>@Model.JoinDate</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Birth Date:</th>
-                        <td>@Model.Birthday</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Account Credits:</th>
-                        <td>$@Model.AccountBalance</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Last Payment:</th>
-                        <td>TO-DO <!--TO-DO--></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">New Projects:</th>
-                        <td>@Model.NewProjectsCount</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Pending Projects:</th>
-                        <td>@Model.PendingProjectsCount</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Completed Projects:</th>
-                        <td>@Model.CompletedProjectsCount</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Latest Project:</th>
-                        <td><!--TO-DO--> <!--Model.LatestProjectID--></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Join Date:</th>
-                        <td>@Model.JoinDate</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Account Manager Name:</th>
-                        <td>@Model.AccountManagerName</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Support:</th>
-                        <td>@Model.TicketCount Tickets, @Model.</td>
-                    </tr>
-                </tbody>
-            </table>
-            
-        </div>
-        <div class="card-footer text-muted">
-            Useless footer
-        </div>
+<div class="card text-center">
+    <div class="card-header">
+        Writing Center Dashboard
     </div>
+    <div class="card-body text-left">
+        <table class="table table-sm">
+            <tbody>
+                <tr>
+                    <th scope="row">Name:</th>
+                    <td>@Model.Name</td>
+                </tr>
+                <tr>
+                    <th scope="row">Account ID:</th>
+                    <td>@Model.AccountId</td>
+                </tr>
+                <tr>
+                    <th scope="row">Account Type:</th>
+                    <td>@Model.AccountType</td>
+                </tr>
+                <tr>
+                    <th scope="row">Last Login Date:</th>
+                    <td>@Model.LastLogin</td>
+                </tr>
+                <tr>
+                    <th scope="row">Join Date:</th>
+                    <td>@Model.JoinDate</td>
+                </tr>
+                <tr>
+                    <th scope="row">Birth Date:</th>
+                    <td>@Model.Birthday</td>
+                </tr>
+                <tr>
+                    <th scope="row">Account Credits:</th>
+                    <td>$@Model.AccountBalance</td>
+                </tr>
+                <tr>
+                    <th scope="row">Last Payment:</th>
+                    <td>TO-DO <!--TO-DO--></td>
+                </tr>
+                <tr>
+                    <th scope="row">New Projects:</th>
+                    <td>@Model.NewProjectsCount</td>
+                </tr>
+                <tr>
+                    <th scope="row">Pending Projects:</th>
+                    <td>@Model.PendingProjectsCount</td>
+                </tr>
+                <tr>
+                    <th scope="row">Completed Projects:</th>
+                    <td>@Model.CompletedProjectsCount</td>
+                </tr>
+                <tr>
+                    <th scope="row">Latest Project:</th>
+                    <td><!--TO-DO--> <!--Model.LatestProjectID--></td>
+                </tr>
+                <tr>
+                    <th scope="row">Join Date:</th>
+                    <td>@Model.JoinDate</td>
+                </tr>
+                <tr>
+                    <th scope="row">Account Manager Name:</th>
+                    <td>@Model.AccountManagerName</td>
+                </tr>
+                <tr>
+                    <th scope="row">Support:</th>
+                    <td>@Model.TicketCount Tickets, @Model.</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+    <div class="card-footer text-muted">
+        Useless footer
+    </div>
+</div>

@@ -2,153 +2,25 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @inject UserManager<iWriterUser> userManager
+<!-- Nav tabs -->
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" id="dashboard-tab" data-toggle="tab" data-target="#dashboard" asp-action="Dashboard" asp-controller="WritingCenter" role="tab" aria-controls="dashboard" aria-selected="true">Dashboard</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="projectManagement-tab" data-toggle="tab" data-target="#projectManagement" asp-action="projectManagement" asp-controller="WritingCenter" role="tab" aria-controls="projectManagement" aria-selected="false">Project Management</a>
+    </li>
 
-    <div id="error"></div>
+</ul>
 
-<div class="row"> 
-    <div class="col-3">
-        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-            <a class="nav-link active" id="v-pills-DASHBOARD-tab" data-toggle="pill" href="#v-pills-DASHBOARD" role="tab" aria-controls="v-pills-DASHBOARD" aria-selected="true">DASHBOARD</a>
-            <a class="nav-link" id="v-pills-PROJECT-ADMINISTRATION-tab" data-toggle="pill" href="#v-pills-PROJECT-ADMINISTRATION" role="tab" aria-controls="v-pills-PROJECT-ADMINISTRATION" aria-selected="false">PROJECT ADMINISTRATION</a>
-            <a class="nav-link" id="v-pills-PROJECTS-tab" data-toggle="pill" href="#v-pills-PROJECTS" role="tab" aria-controls="v-pills-PROJECTS" aria-selected="false">PROJECTS</a>
-            <a class="nav-link" id="v-pills-PAYMENTS-tab" data-toggle="pill" href="#v-pills-PAYMENTS" role="tab" aria-controls="v-pills-PAYMENTS" aria-selected="false">PAYMENTS</a>
-            <a class="nav-link" id="v-pills-PROFILE-tab" data-toggle="pill" href="#v-pills-PROFILE" role="tab" aria-controls="v-pills-PROFILE" aria-selected="false">PROFILE</a>
-            <a class="nav-link" id="v-pills-SUPPORT-tab" data-toggle="pill" href="#v-pills-SUPPORT" role="tab" aria-controls="v-pills-SUPPORT" aria-selected="false">SUPPORT</a>
-            <a class="nav-link" id="v-pills-FEEDBACK-tab" data-toggle="pill" href="#v-pills-FEEDBACK" role="tab" aria-controls="v-pills-FEEDBACK" aria-selected="false">FEEDBACK</a>
-            <a class="nav-link" id="v-pills-BLOG-tab" data-toggle="pill" href="#v-pills-BLOG" role="tab" aria-controls="v-pills-BLOG" aria-selected="false">BLOG</a>
-        </div>
-    </div>
-    <div class="col-9">
-        <div class="tab-content" id="v-pills-tabContent">
-            <div class="tab-pane fade show active" id="v-pills-DASHBOARD" role="tabpanel" aria-labelledby="v-pills-DASHBOARD-tab">
-                <div id="v-pills-DASHBOARD-tab-content"></div>
-            </div>
-            <div class="tab-pane fade" id="v-pills-PROJECT-ADMINISTRATION" role="tabpanel" aria-labelledby="v-pills-PROJECT-ADMINISTRATION-tab">
-                <div id="v-pills-PROJECT-ADMINISTRATION-tab-content"></div>
-            </div>
-            <div class="tab-pane fade" id="v-pills-PROJECTS" role="tabpanel" aria-labelledby="v-pills-PROJECTS-tab">
-                <div id="v-pills-PROJECTS-tab-content"></div>
-            </div>
-            <div class="tab-pane fade" id="v-pills-PAYMENTS" role="tabpanel" aria-labelledby="v-pills-PAYMENTS-tab">
-                <div id="v-pills-PAYMENTS-tab-content"></div>
-            </div>
-            <div class="tab-pane fade" id="v-pills-PROFILE" role="tabpanel" aria-labelledby="v-pills-PROFILE-tab">
-                <div id="v-pills-PROFILE-tab-content"></div>
-            </div>
-            <div class="tab-pane fade" id="v-pills-SUPPORT" role="tabpanel" aria-labelledby="v-pills-SUPPORT-tab">
-                <div id="v-pills-SUPPORT-tab-content"></div>
-            </div>
-            <div class="tab-pane fade" id="v-pills-FEEDBACK" role="tabpanel" aria-labelledby="v-pills-FEEDBACK-tab">
-                <div id="v-pills-FEEDBACK-tab-content"></div>
-            </div>
-            <div class="tab-pane fade" id="v-pills-BLOG" role="tabpanel" aria-labelledby="v-pills-BLOG-tab">
-                <div id="v-pills-BLOG-tab-content"></div>
-            </div>
-        </div>
-    </div>
+<!-- Tab panes -->
+<div class="tab-content">
+    <div class="tab-pane active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">1</div>
+    <div class="tab-pane" id="projectManagement" role="tabpanel" aria-labelledby="profile-tab">2</div>
 </div>
 
-
-
 @section Scripts {
-    <script>
-
-        @{ 
-            var user = await userManager.GetUserAsync(User);
-            var userId = user.Id;
-        }
-        $(document).ready(function () {
-            // initial value for the storage item
-            localStorage.setItem('activeTab', "v-pills-DASHBOARD-tab");
-
-            $('a[data-toggle="pill"]').on('show.bs.tab', function(e) {
-		            localStorage.setItem('activeTab', $(e.target).attr('href'));
-                });
-
-            var activeTab = localStorage.getItem('activeTab');
-
-            if (activeTab) {
-                $('#v-pills-tab a[href="' + activeTab + '"]').tab('show');
-            }
-
-
-            $("#v-pills-tab a").trigger("click", activeTab);
-            
-            $("#v-pills-tab a").on("click", function (event) {
-                $("#v-pills-tab a").trigger("click", activeTab);
-            });
-
-            /*
-            $("#v-pills-tab a").on("click", function (event) {
-                var idClicked = event.target.id;
-                var divSelected = "#" + idClicked + "-content";
-                LoadContent(divSelected, idClicked);
-            });
-            */
-
-            $("#v-pills-tab a").on("click", function (event, activeTab) {
-                var idClicked = activeTab;
-                alert(idClicked);
-                var divSelected = idClicked + "-content";
-                LoadContent(divSelected, idClicked);
-            });
-
-
-            
-        });
-
-        function LoadContent(idSelector, idClicked) {
-            $(idSelector).html('<div class="text-center"><img style="margin:0px auto;" src="/images/progress_indicator_circle.gif"></div>');
-            var chosenView = ChooseView(idClicked);
-            //alert(idSelector);
-            //alert(chosenView);
-            $(idSelector).load("/WritingCenter/RequestPartialView", { userId: "@userId", viewName: "" + chosenView }, function (response, status, xhr) {
-                if (status == "error") {
-                    $("#error").css("display", "inline-block");
-                    var msg = "Sorry but there was an error: ";
-                    $("#error").html(msg + xhr.status + " " + xhr.statusText);
-                } else {
-                    $("#error").css("display", "none");
-                }
-            });
-        }
-
-        function ChooseView(idClicked) {
-
-            switch(idClicked) {
-                case 'v-pills-DASHBOARD-tab-content':
-                    return "DashBoard";
-                    break;
-                case 'v-pills-DASHBOARD-tab':
-                    return "DashBoard";
-                    break;
-                case 'v-pills-PROJECT-ADMINISTRATION-tab':
-                    return "ProjectAdministration";
-                    break;
-                case 'v-pills-PROJECTS-tab':
-                    return "Projects";
-                    break;
-                case 'v-pills-PAYMENTS-tab':
-                    return "Payments";
-                    break;
-                case 'v-pills-PROFILE-tab':
-                    return "Profile";
-                    break;
-                case 'v-pills-SUPPORT-tab':
-                    return "Support";
-                    break;
-                case 'v-pills-FEEDBACK-tab':
-                    return "Feedback";
-                    break;
-                case 'v-pills-BLOG-tab':
-                    return "Blog";
-                    break;
-                default:
-                    return "DashBoard";
-                    break;
-            } 
-        }
+    <scipt>
         
-
-    </script>
+    </scipt>
 }
