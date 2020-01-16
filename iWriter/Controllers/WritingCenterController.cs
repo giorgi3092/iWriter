@@ -8,10 +8,13 @@ using iWriter.Interfaces.FeatureAndProjectType;
 using iWriter.Models;
 using iWriter.ViewModels;
 using iWriter.ViewModels.FeatureViewModels;
+using iWriter.ViewModels.ProjectTypeViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 
 namespace iWriter.Controllers
@@ -39,12 +42,12 @@ namespace iWriter.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index ()
+        public IActionResult Index()
         {
             return View();
         }
 
-        
+
 
 
         /************************************** MANAGER/ADMIN ONLY - Features & Project Types **********************************/
@@ -56,7 +59,7 @@ namespace iWriter.Controllers
             return PartialView(vm);
         }
 
-        public IActionResult CreateFeatures ()
+        public IActionResult CreateFeatures()
         {
             return PartialView();
         }
@@ -72,7 +75,7 @@ namespace iWriter.Controllers
                 featureUnitOfWorkRepository.Save();
                 return RedirectToAction("Index", "WritingCenter");
             }
-            catch(InvalidOperationException ex)
+            catch (InvalidOperationException ex)
             {
                 logger.LogError(ex.Message);
             }
@@ -97,6 +100,112 @@ namespace iWriter.Controllers
             var vm = mapper.Map<FeatureViewModel>(model);
             return View(vm);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> EditFeature(FeatureViewModel vm)
+        {
+            if (vm == null)
+            {
+                return View();
+            }
+
+            var model = mapper.Map<Feature>(vm);
+            await featureUnitOfWorkRepository.featureRepository.Update(model);
+            featureUnitOfWorkRepository.Save();
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteFeature(int id)
+        {
+            var model = await featureUnitOfWorkRepository.featureRepository.GetFeature(id);
+            var vm = mapper.Map<FeatureViewModel>(model);
+            return View(vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteFeaturePost(int id)
+        {
+            await featureUnitOfWorkRepository.featureRepository.Delete(id);
+            featureUnitOfWorkRepository.Save();
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult GetAllProjectTypes()
+        {
+            var model = featureUnitOfWorkRepository.projectTypeRepository.GetAllProjectTypes();
+            var vm = mapper.Map<IEnumerable<ProjectTypeViewModel>>(model);
+            return PartialView(vm);
+        }
+
+        [HttpGet]
+        public IActionResult CreateProjectType()
+        {
+            // get all features from the Db
+            var featuresFromRepo = featureUnitOfWorkRepository.featureRepository.GetAllFeatures();
+            
+            // this list of Select List items will be displayed. User will choose which ones to add
+            var selectList = new List<SelectListItem>();
+
+            // populate select list items with entries retrieved from the Db
+            foreach (var item in featuresFromRepo)
+            {
+                selectList.Add(new SelectListItem(item.FeatureText, item.FeatureId.ToString()));
+            }
+
+            var vm = new CreateProjectTypeViewModel()
+            {
+                Features = selectList
+            };
+
+            return PartialView(vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateProjectType(CreateProjectTypeViewModel vm)
+        {
+            try
+            {
+                ProjectType projectType = new ProjectType()
+                {
+                    StarQuality = vm.StarQuality,
+                    DaysToDeliver = vm.DaysToDeliver,
+                    Rate = vm.Rate,
+                    ProjectTypeName = vm.ProjectTypeName
+                };
+
+                foreach (var item in vm.SelectedTags)
+                {
+                    if (!Int32.TryParse(item, out int result))
+                    {
+                        ModelState.AddModelError(string.Empty, "Someone might've interfered with the inspect element :))");
+                        return RedirectToAction("Index");
+                    }
+                    projectType.ProjectTypeFeatures.Add(new ProjectTypeFeature()
+                    {
+                        FeatureId = result
+                    });
+                }
+
+                await featureUnitOfWorkRepository.projectTypeRepository.Add(projectType);
+                featureUnitOfWorkRepository.Save();
+
+                return RedirectToAction("Index");
+            } catch
+            {
+                return RedirectToAction("Index");
+            }
+        }
+
+        /*
+        [HttpPost]
+        public IActionResult CreateProjectTypePost(CreateProjectTypeViewModel vm)
+        {
+            var model = mapper.Map<ProjectType>(vm);
+
+        }*/
 
 
         /********************************* Actions for Tab Action Views ************************************/

@@ -39,12 +39,12 @@ namespace iWriter.Repositories.Feature
             return projectType;
         }
 
-        public IEnumerable<ProjectType> GetAllFeatures()
+        public IEnumerable<ProjectType> GetAllProjectTypes()
         {
             return _iWriterContext.ProjectTypes;
         }
 
-        public async Task<ProjectType> GetFeature(int Id)
+        public async Task<ProjectType> GetProjectType(int Id)
         {
             return await _iWriterContext.ProjectTypes.FindAsync(Id);
         }

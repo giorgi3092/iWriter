@@ -1,0 +1,53 @@
+﻿@model IEnumerable<iWriter.ViewModels.ProjectTypeViewModels.ProjectTypeViewModel>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProjectTypeId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProjectTypeName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Rate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StarQuality)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DaysToDeliver)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProjectTypeId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProjectTypeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Rate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StarQuality)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DaysToDeliver)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "EditProjectType", new { id=item.ProjectTypeId }) |
+                @Html.ActionLink("Details", "ProjectTypeDetails", new { id=item.ProjectTypeId }) |
+                @Html.ActionLink("Delete", "DeleteProjectType", new { id=item.ProjectTypeId })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

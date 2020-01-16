@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using iWriter.Models;
 using iWriter.ViewModels.FeatureViewModels;
+using iWriter.ViewModels.ProjectTypeViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +13,10 @@ namespace iWriter.Helpers
     {
         public Helper()
         {
-            CreateMap<Feature, FeatureViewModel>();
+            CreateMap<Feature, FeatureViewModel>().ReverseMap();
             CreateMap<CreateFeatureViewModel, Feature>();
             CreateMap<Task<Feature>, FeatureViewModel>();
+            CreateMap<ProjectType, ProjectTypeViewModel>().ReverseMap();
         }
     }
 }

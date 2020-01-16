@@ -34,7 +34,7 @@ namespace iWriter.Repositories.Feature
             }
         }
 
-        public IProjectTypeRepository projectType 
+        public IProjectTypeRepository projectTypeRepository 
         {
             get
             {

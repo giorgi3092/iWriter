@@ -14,6 +14,6 @@ namespace iWriter.Models
         [Display(Name = "Feature text")]
         public string FeatureText { get; set; }
 
-        public IList<ProjectTypeFeature> ProjectTypeFeature { get; set; }
+        public IList<ProjectTypeFeature> ProjectTypeFeatures { get; set; }
     }
 }

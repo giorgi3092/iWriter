@@ -1,19 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace iWriter.Models
+namespace iWriter.ViewModels.ProjectTypeViewModels
 {
-    public class ProjectType
+    public class ProjectTypeViewModel
     {
-        public ProjectType()
-        {
-            ProjectTypeFeatures = new List<ProjectTypeFeature>();
-        }
-
+        [Display(Name = "Id")]
         public int ProjectTypeId { get; set; }
 
         [Required]
@@ -32,10 +27,5 @@ namespace iWriter.Models
         [Required]
         [Display(Name = "Turn Around Time")]
         public int DaysToDeliver { get; set; }
-
-        // navigation properties
-        public IList<ProjectTypeFeature> ProjectTypeFeatures { get; set; }
-
-        public IList<ProjectProjectType> ProjectProjectType { get; set; }
     }
 }

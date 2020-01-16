@@ -1,9 +1,13 @@
 ﻿<h3>Features</h3>
 <div id="projectFeaturesIndex"></div>
 <div id="projectFeaturesCreate"></div>
+<div id="projectTypeIndex"></div>
+<div id="projectTypeCreate"></div>
 
 
 <script>
     $('#projectFeaturesIndex').load("/WritingCenter/GetAllProjectFeatures");
     $('#projectFeaturesCreate').load("/WritingCenter/CreateFeatures");
+    $('#projectTypeIndex').load("/WritingCenter/GetAllProjectTypes");
+    $('#projectTypeCreate').load("/WritingCenter/CreateProjectType");
 </script>

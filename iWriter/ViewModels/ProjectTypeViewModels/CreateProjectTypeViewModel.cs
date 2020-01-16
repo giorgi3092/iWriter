@@ -1,21 +1,14 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace iWriter.Models
+namespace iWriter.ViewModels.ProjectTypeViewModels
 {
-    public class ProjectType
+    public class CreateProjectTypeViewModel
     {
-        public ProjectType()
-        {
-            ProjectTypeFeatures = new List<ProjectTypeFeature>();
-        }
-
-        public int ProjectTypeId { get; set; }
-
         [Required]
         [Display(Name = "Project Type Name")]
         [MaxLength(50, ErrorMessage = "Name cannot exceed {0} characters")]
@@ -33,9 +26,11 @@ namespace iWriter.Models
         [Display(Name = "Turn Around Time")]
         public int DaysToDeliver { get; set; }
 
-        // navigation properties
-        public IList<ProjectTypeFeature> ProjectTypeFeatures { get; set; }
+        // used to display all features in the Db
+        [Display(Name = "Select Features for this project type")]
+        public IList<SelectListItem> Features { get; set; }
 
-        public IList<ProjectProjectType> ProjectProjectType { get; set; }
+        // stores selected Select List items from the createProjectType page
+        public string[] SelectedTags { get; set; }
     }
 }

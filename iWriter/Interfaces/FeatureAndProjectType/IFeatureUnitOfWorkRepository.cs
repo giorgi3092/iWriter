@@ -8,7 +8,7 @@ namespace iWriter.Interfaces.FeatureAndProjectType
     public interface IFeatureUnitOfWorkRepository
     {
         IFeatureRepository featureRepository { get; }
-        IProjectTypeRepository projectType { get; }
+        IProjectTypeRepository projectTypeRepository { get; }
 
         void Save();
     }

@@ -14,6 +14,8 @@
     <Compile Remove="Migrations\20200103142514_IdentityExtended.Designer.cs" />
     <Compile Remove="Migrations\20200109101409_ProjectTypes.cs" />
     <Compile Remove="Migrations\20200109101409_ProjectTypes.Designer.cs" />
+    <Compile Remove="Migrations\20200116120326_UpdateLittleChanges.cs" />
+    <Compile Remove="Migrations\20200116120326_UpdateLittleChanges.Designer.cs" />
   </ItemGroup>
 
 

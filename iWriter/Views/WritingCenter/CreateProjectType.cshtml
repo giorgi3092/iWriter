@@ -1,0 +1,46 @@
+﻿@model iWriter.ViewModels.ProjectTypeViewModels.CreateProjectTypeViewModel
+
+<h4>CreateProjectTypeViewModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreateProjectType">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ProjectTypeName" class="control-label"></label>
+                <input asp-for="ProjectTypeName" class="form-control" />
+                <span asp-validation-for="ProjectTypeName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Rate" class="control-label"></label>
+                <input asp-for="Rate" class="form-control" />
+                <span asp-validation-for="Rate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StarQuality" class="control-label"></label>
+                <input asp-for="StarQuality" class="form-control" />
+                <span asp-validation-for="StarQuality" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DaysToDeliver" class="control-label"></label>
+                <input asp-for="DaysToDeliver" class="form-control" />
+                <span asp-validation-for="DaysToDeliver" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Features" class="control-label"></label>
+                <select asp-for="SelectedTags" asp-items="Model.Features" class="form-control">
+                    <options></options>
+                </select>
+                <span asp-validation-for="Features" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

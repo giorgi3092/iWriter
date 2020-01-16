@@ -8,8 +8,8 @@ namespace iWriter.Interfaces.FeatureAndProjectType
 {
     public interface IProjectTypeRepository
     {
-        Task<ProjectType> GetFeature(int Id);
-        IEnumerable<ProjectType> GetAllFeatures();
+        Task<ProjectType> GetProjectType(int Id);
+        IEnumerable<ProjectType> GetAllProjectTypes();
         Task<ProjectType> Add(ProjectType projectType);
         Task<ProjectType> Update(ProjectType projectTypeChanges);
         Task<ProjectType> Delete(int id);
