@@ -164,6 +164,7 @@ namespace iWriter.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateProjectType(CreateProjectTypeViewModel vm)
         {
             try
@@ -199,13 +200,86 @@ namespace iWriter.Controllers
             }
         }
 
-        /*
-        [HttpPost]
-        public IActionResult CreateProjectTypePost(CreateProjectTypeViewModel vm)
+        [HttpGet]
+        public async Task<IActionResult> EditProjectType(int id)
         {
-            var model = mapper.Map<ProjectType>(vm);
+            ProjectType projectType = await featureUnitOfWorkRepository.projectTypeRepository.GetProjectType(id);
+            IEnumerable<Feature> features = featureUnitOfWorkRepository.featureRepository.GetAllFeatures();
 
-        }*/
+            IEnumerable<Feature> selectedFeatures = projectType.ProjectTypeFeatures.Select(x => new Feature() 
+            { 
+                FeatureId = x.Feature.FeatureId,
+                FeatureText = x.Feature.FeatureText
+            });
+            /*
+            IEnumerable<Feature> selectedFeatures_SAME = from Features in projectType.ProjectTypeFeatures
+                                                     select new Feature() { 
+                                                         FeatureId = Features.Feature.FeatureId,
+                                                         FeatureText = Features.Feature.FeatureText
+                                                     };
+            */
+
+            var selectList = new List<SelectListItem>();
+            foreach (Feature feature in features)
+            {
+                selectList.Add(new SelectListItem(
+                        feature.FeatureText, 
+                        feature.FeatureId.ToString(), 
+                        selectedFeatures.Select(x => x.FeatureId).Contains(feature.FeatureId)
+                    ));
+            }
+
+            var vm = new EditProjectTypeViewModel()
+            {
+                ProjectTypeId = projectType.ProjectTypeId,
+                ProjectTypeName = projectType.ProjectTypeName,
+                DaysToDeliver = projectType.DaysToDeliver,
+                Rate = projectType.Rate,
+                StarQuality = projectType.StarQuality,
+                Features = selectList
+            };
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditProjectType (EditProjectTypeViewModel vm)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return RedirectToAction("Index");
+                }
+
+                var projectType = await featureUnitOfWorkRepository.projectTypeRepository.GetProjectType(vm.ProjectTypeId);
+                
+                if(projectType == null)
+                {
+                    return RedirectToAction("Index");
+                }
+
+                // update according to the View Model
+                projectType.ProjectTypeName = vm.ProjectTypeName;
+                projectType.Rate = vm.Rate;
+                projectType.StarQuality = vm.StarQuality;
+
+                var selectedFeatures = vm.SelectedFeatures;
+                var existingFeatures = projectType.ProjectTypeFeatures.Select(x => x.FeatureId).ToList();
+
+                var toAdd = selectedFeatures.Except(existingFeatures).ToList();
+                var toRemove = existingFeatures.Except(selectedFeatures).ToList();
+
+            }
+
+            catch
+            {
+
+            }
+
+            return RedirectToAction("Index");
+        }
 
 
         /********************************* Actions for Tab Action Views ************************************/

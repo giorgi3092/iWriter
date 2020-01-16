@@ -1,5 +1,6 @@
 ﻿using iWriter.Interfaces.FeatureAndProjectType;
 using iWriter.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,6 @@ namespace iWriter.Repositories.Feature
         public async Task<ProjectType> Add(ProjectType projectType)
         {
             await _iWriterContext.ProjectTypes.AddAsync(projectType);
-            await _iWriterContext.SaveChangesAsync();
             return projectType;
         }
 
@@ -33,7 +33,6 @@ namespace iWriter.Repositories.Feature
             if(projectType != null)
             {
                 _iWriterContext.Remove(projectType);
-                await _iWriterContext.SaveChangesAsync();
             }
 
             return projectType;
@@ -46,14 +45,13 @@ namespace iWriter.Repositories.Feature
 
         public async Task<ProjectType> GetProjectType(int Id)
         {
-            return await _iWriterContext.ProjectTypes.FindAsync(Id);
+            return await _iWriterContext.ProjectTypes.Include("ProjectTypeFeatures.Feature").FirstOrDefaultAsync(x => x.ProjectTypeId == Id);
         }
 
         public async Task<ProjectType> Update(ProjectType projectTypeChanges)
         {
             var projectType = _iWriterContext.ProjectTypes.Attach(projectTypeChanges);
             projectType.State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            await _iWriterContext.SaveChangesAsync();
             return projectTypeChanges;
         }
     }
