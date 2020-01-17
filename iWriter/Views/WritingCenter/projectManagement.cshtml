@@ -1,4 +1,23 @@
-﻿<h3>Features</h3>
+﻿@inject IActionFeedback actionFeedback
+
+@{
+    if (actionFeedback.SuccessUnsuccess == false)
+    {
+        <div class="alert alert-danger" role="alert">
+            Unsuccessful Operation
+        </div>
+    }
+    else if (actionFeedback.SuccessUnsuccess == true)
+    {
+        <div class="alert alert-success" role="alert">
+                    Successful Operation
+        </div>
+    }
+
+    // reset the action feedback to null
+    actionFeedback.SuccessUnsuccess = null;
+}
+<h3>Features</h3>
 <div id="projectFeaturesIndex"></div>
 <div id="projectFeaturesCreate"></div>
 <div id="projectTypeIndex"></div>

@@ -10,11 +10,12 @@ namespace iWriter.ViewModels.ProjectTypeViewModels
 {
     public class EditProjectTypeViewModel
     {
+
         public int ProjectTypeId { get; set; }
 
         [Required]
         [Display(Name = "Project Type Name")]
-        [MaxLength(50, ErrorMessage = "Name cannot exceed {0} characters")]
+        [MaxLength(50, ErrorMessage = "Name cannot exceed {1} characters")]
         public string ProjectTypeName { get; set; }
 
         [Required]

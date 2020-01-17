@@ -4,16 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using iWriter.Areas.Identity.Data;
+using iWriter.Helpers;
 using iWriter.Interfaces.FeatureAndProjectType;
 using iWriter.Models;
 using iWriter.ViewModels;
 using iWriter.ViewModels.FeatureViewModels;
 using iWriter.ViewModels.ProjectTypeViewModels;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 
@@ -27,18 +26,21 @@ namespace iWriter.Controllers
         private readonly IFeatureUnitOfWorkRepository featureUnitOfWorkRepository;
         private readonly IMapper mapper;
         private readonly ILogger<WritingCenterController> logger;
+        private IActionFeedback actionFeedback;
 
         public WritingCenterController(UserManager<iWriterUser> userManager,
                                        SignInManager<iWriterUser> signInManager,
                                        IFeatureUnitOfWorkRepository featureUnitOfWorkRepository,
                                        IMapper mapper,
-                                       ILogger<WritingCenterController> logger)
+                                       ILogger<WritingCenterController> logger,
+                                       IActionFeedback actionFeedback)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.featureUnitOfWorkRepository = featureUnitOfWorkRepository;
             this.mapper = mapper;
             this.logger = logger;
+            this.actionFeedback = actionFeedback;
         }
 
         [HttpGet]
@@ -182,7 +184,7 @@ namespace iWriter.Controllers
                     if (!Int32.TryParse(item, out int result))
                     {
                         ModelState.AddModelError(string.Empty, "Someone might've interfered with the inspect element :))");
-                        return RedirectToAction("Index");
+                        return View();
                     }
                     projectType.ProjectTypeFeatures.Add(new ProjectTypeFeature()
                     {
@@ -196,6 +198,7 @@ namespace iWriter.Controllers
                 return RedirectToAction("Index");
             } catch
             {
+                ModelState.AddModelError(string.Empty, "test error");
                 return RedirectToAction("Index");
             }
         }
@@ -211,13 +214,6 @@ namespace iWriter.Controllers
                 FeatureId = x.Feature.FeatureId,
                 FeatureText = x.Feature.FeatureText
             });
-            /*
-            IEnumerable<Feature> selectedFeatures_SAME = from Features in projectType.ProjectTypeFeatures
-                                                     select new Feature() { 
-                                                         FeatureId = Features.Feature.FeatureId,
-                                                         FeatureText = Features.Feature.FeatureText
-                                                     };
-            */
 
             var selectList = new List<SelectListItem>();
             foreach (Feature feature in features)
@@ -246,15 +242,32 @@ namespace iWriter.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditProjectType (EditProjectTypeViewModel vm)
         {
+            ProjectType projectType;
+            projectType = await featureUnitOfWorkRepository.projectTypeRepository.GetProjectType(vm.ProjectTypeId);
+            List<SelectListItem> itemsInSelectList = new List<SelectListItem>();
+            var retrievedFeatures = featureUnitOfWorkRepository.featureRepository.GetAllFeatures();
+            var AllFeaturesInprojectType = projectType.ProjectTypeFeatures.Select(x => new Feature()
+            {
+                FeatureId = x.Feature.FeatureId,
+                FeatureText = x.Feature.FeatureText
+            });
+            foreach (var item in retrievedFeatures)
+            {
+                itemsInSelectList.Add(new SelectListItem
+                {
+                    Value = item.FeatureId.ToString(),
+                    Text = item.FeatureText,
+                    Selected = AllFeaturesInprojectType.Select(x => x.FeatureId).Contains(item.FeatureId)
+                });
+            }
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    return RedirectToAction("Index");
+                    vm.Features = itemsInSelectList;
+                    return View(vm);
                 }
 
-                var projectType = await featureUnitOfWorkRepository.projectTypeRepository.GetProjectType(vm.ProjectTypeId);
-                
                 if(projectType == null)
                 {
                     return RedirectToAction("Index");
@@ -267,18 +280,41 @@ namespace iWriter.Controllers
 
                 var selectedFeatures = vm.SelectedFeatures;
                 var existingFeatures = projectType.ProjectTypeFeatures.Select(x => x.FeatureId).ToList();
+                var existingFeaturesString = new List<string>();
+                existingFeatures.ForEach(x => existingFeaturesString.Add(x.ToString()));
 
-                var toAdd = selectedFeatures.Except(existingFeatures).ToList();
-                var toRemove = existingFeatures.Except(selectedFeatures).ToList();
+                var toAdd = selectedFeatures.Except(existingFeaturesString).ToList();
+                var toRemove = existingFeaturesString.Except(selectedFeatures).ToList();
 
+                // using toAdd and toRemove
+                projectType.ProjectTypeFeatures = projectType.ProjectTypeFeatures.Where(x => !toRemove.Contains(x.FeatureId.ToString())).ToList();
+                foreach (var item in toAdd)
+                {
+                    if(!Int32.TryParse(item, out int resultId))
+                    {
+                        ModelState.AddModelError(string.Empty, "Someone might've interfered with the inspect element :))");
+                        return View();
+                    }
+
+
+                    projectType.ProjectTypeFeatures.Add(new ProjectTypeFeature()
+                    {
+                        FeatureId = resultId,
+                        ProjectTypeId = projectType.ProjectTypeId
+                    });
+                }
+
+                featureUnitOfWorkRepository.Save();
+                actionFeedback.SuccessUnsuccess = true;
+                return RedirectToAction("index");
             }
 
             catch
             {
-
+                vm.Features = itemsInSelectList;
+                ModelState.AddModelError(string.Empty, "A strange error occured. Try again later.");
+                return View(vm);
             }
-
-            return RedirectToAction("Index");
         }
 
 

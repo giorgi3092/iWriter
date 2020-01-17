@@ -5,9 +5,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>EditProjectType</h1>
+<h1>Edit Project Type</h1>
 
-<h4>EditProjectTypeViewModel</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -40,7 +39,8 @@
             </div>
             <div class="form-group">
                 <label asp-for="SelectedFeatures" class="control-label"></label>
-                <select asp-for="SelectedFeatures" asp-items="Model.Features">
+                <select asp-for="SelectedFeatures" asp-items="Model.Features" data-bind="Model.Features">
+                
                 </select>
                 <span asp-validation-for="DaysToDeliver" class="text-danger"></span>
             </div>

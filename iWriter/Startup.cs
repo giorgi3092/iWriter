@@ -48,6 +48,7 @@ namespace iWriter
 
             var mapper = config.CreateMapper();
             services.AddSingleton(mapper);
+            services.AddSingleton<IActionFeedback, ActionFeedback>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
