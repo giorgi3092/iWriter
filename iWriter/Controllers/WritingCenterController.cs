@@ -343,7 +343,7 @@ namespace iWriter.Controllers
             catch (ProjectTypeNotFoundException ex)
             {
                 actionFeedback.SuccessUnsuccess = false;
-                logger.LogError(ex, $"User {User.Identity.Name} requested ProjectTypeId: {ex.ProjectTypeId}. Project Type not found.");
+                logger.LogError(ex, $"User {User.Identity.Name} requested ProjectTypeId: {ex.ProjectTypeId}. {ex.Message}");
                 return RedirectToAction("Index");
             }
 
@@ -352,6 +352,48 @@ namespace iWriter.Controllers
                 vm.Features = itemsInSelectList;
                 ModelState.AddModelError(string.Empty, "A strange error occured. Try again later.");
                 return View(vm);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteProjectType (int Id)
+        {
+            var projectType = await featureUnitOfWorkRepository.projectTypeRepository.GetProjectType(Id);
+            var vm = mapper.Map<ProjectTypeViewModel>(projectType);
+            return View(vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteProjectTypePost(int id)
+        {
+            try
+            {
+                var projectType = await featureUnitOfWorkRepository.projectTypeRepository.GetProjectType(id);
+
+                if(projectType == null)
+                {
+                    throw new ProjectTypeNotFoundException("Project Type Id not found.", id);
+                }
+
+                await featureUnitOfWorkRepository.featureRepository.Delete(projectType.ProjectTypeId);
+                featureUnitOfWorkRepository.Save();
+                actionFeedback.SuccessUnsuccess = true;
+                return RedirectToAction("Index");
+            }
+
+            catch(ProjectTypeNotFoundException ex)
+            {
+                actionFeedback.SuccessUnsuccess = false;
+                logger.LogError(ex, $"User {User.Identity.Name} requested deletion of ProjectTypeId: {ex.ProjectTypeId}. {ex.Message}");
+                return RedirectToAction("Index");
+            }
+
+            catch(Exception ex)
+            {
+                actionFeedback.SuccessUnsuccess = false;
+                logger.LogError(ex, $"User {User.Identity.Name} requested deletion of ProjectTypeId: . {ex.Message}");
+                return RedirectToAction("Index");
             }
         }
 
