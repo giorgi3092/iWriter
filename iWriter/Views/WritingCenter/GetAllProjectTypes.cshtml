@@ -1,8 +1,6 @@
 ﻿@model IEnumerable<iWriter.ViewModels.ProjectTypeViewModels.ProjectTypeViewModel>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<hr>
+<h3>Project Types</h3>
 <table class="table">
     <thead>
         <tr>
@@ -34,7 +32,7 @@
                 @Html.DisplayFor(modelItem => item.ProjectTypeName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Rate)
+                @Html.DisplayFor(modelItem => item.Rate) 
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.StarQuality)

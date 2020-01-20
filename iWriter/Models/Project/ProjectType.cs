@@ -22,7 +22,9 @@ namespace iWriter.Models
         public string ProjectTypeName { get; set; }
 
         [Required]
-        [Display(Name = "Rate")]
+        [Display(Name = "Rate (per 100 words)")]
+        [Column(TypeName = "decimal(18, 2)")]
+        [DataType(DataType.Currency)]
         public decimal Rate { get; set; }
 
         [Required]

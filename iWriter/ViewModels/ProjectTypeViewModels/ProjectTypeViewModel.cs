@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,7 +18,9 @@ namespace iWriter.ViewModels.ProjectTypeViewModels
         public string ProjectTypeName { get; set; }
 
         [Required]
-        [Display(Name = "Rate")]
+        [Display(Name = "Rate (per 100 words)")]
+        [Column(TypeName = "decimal(18, 2)")]
+        [DataType(DataType.Currency)]
         public decimal Rate { get; set; }
 
         [Required]

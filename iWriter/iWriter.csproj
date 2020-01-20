@@ -16,6 +16,8 @@
     <Compile Remove="Migrations\20200109101409_ProjectTypes.Designer.cs" />
     <Compile Remove="Migrations\20200116120326_UpdateLittleChanges.cs" />
     <Compile Remove="Migrations\20200116120326_UpdateLittleChanges.Designer.cs" />
+    <Compile Remove="Migrations\20200120125650_slightModelVariation.cs" />
+    <Compile Remove="Migrations\20200120125650_slightModelVariation.Designer.cs" />
   </ItemGroup>
 
 
@@ -28,6 +30,14 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="4.9.0" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Content Update="nlog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

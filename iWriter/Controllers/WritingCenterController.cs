@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using iWriter.Areas.Identity.Data;
+using iWriter.CustomExceptions;
 using iWriter.Helpers;
 using iWriter.Interfaces.FeatureAndProjectType;
 using iWriter.Models;
@@ -171,7 +172,26 @@ namespace iWriter.Controllers
         {
             try
             {
-                ProjectType projectType = new ProjectType()
+                // get all features from the Db
+                var featuresFromRepo = featureUnitOfWorkRepository.featureRepository.GetAllFeatures();
+
+                // this list of Select List items will be displayed. User will choose which ones to add
+                var selectList = new List<SelectListItem>();
+
+                // populate select list items with entries retrieved from the Db
+                foreach (var item in featuresFromRepo)
+                {
+                    selectList.Add(new SelectListItem(item.FeatureText, item.FeatureId.ToString()));
+                }
+
+                vm.Features = selectList;
+
+                if (!ModelState.IsValid)
+                {
+                    return View(vm);
+                }
+
+                    ProjectType projectType = new ProjectType()
                 {
                     StarQuality = vm.StarQuality,
                     DaysToDeliver = vm.DaysToDeliver,
@@ -184,7 +204,7 @@ namespace iWriter.Controllers
                     if (!Int32.TryParse(item, out int result))
                     {
                         ModelState.AddModelError(string.Empty, "Someone might've interfered with the inspect element :))");
-                        return View();
+                        return View(vm);
                     }
                     projectType.ProjectTypeFeatures.Add(new ProjectTypeFeature()
                     {
@@ -195,11 +215,18 @@ namespace iWriter.Controllers
                 await featureUnitOfWorkRepository.projectTypeRepository.Add(projectType);
                 featureUnitOfWorkRepository.Save();
 
+                actionFeedback.SuccessUnsuccess = true;
                 return RedirectToAction("Index");
-            } catch
+            } catch (NullReferenceException ex)
             {
-                ModelState.AddModelError(string.Empty, "test error");
-                return RedirectToAction("Index");
+                if (vm.SelectedTags == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Please select at least one feature to add.");
+                }
+
+                logger.LogError(ex, "Null reference during Project Type creation. Most likely, no featured selected. Exception message: " + ex.Message);
+                actionFeedback.SuccessUnsuccess = false;
+                return View(vm);
             }
         }
 
@@ -242,35 +269,39 @@ namespace iWriter.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditProjectType (EditProjectTypeViewModel vm)
         {
-            ProjectType projectType;
-            projectType = await featureUnitOfWorkRepository.projectTypeRepository.GetProjectType(vm.ProjectTypeId);
             List<SelectListItem> itemsInSelectList = new List<SelectListItem>();
-            var retrievedFeatures = featureUnitOfWorkRepository.featureRepository.GetAllFeatures();
-            var AllFeaturesInprojectType = projectType.ProjectTypeFeatures.Select(x => new Feature()
-            {
-                FeatureId = x.Feature.FeatureId,
-                FeatureText = x.Feature.FeatureText
-            });
-            foreach (var item in retrievedFeatures)
-            {
-                itemsInSelectList.Add(new SelectListItem
-                {
-                    Value = item.FeatureId.ToString(),
-                    Text = item.FeatureText,
-                    Selected = AllFeaturesInprojectType.Select(x => x.FeatureId).Contains(item.FeatureId)
-                });
-            }
+
             try
             {
+                ProjectType projectType;
+                projectType = await featureUnitOfWorkRepository.projectTypeRepository.GetProjectType(vm.ProjectTypeId);
+
+                if(projectType == null)
+                {
+                    throw new ProjectTypeNotFoundException("The requested Project Type does not exist", vm.ProjectTypeId);
+                }
+
+                var retrievedFeatures = featureUnitOfWorkRepository.featureRepository.GetAllFeatures();
+
+                var AllFeaturesInprojectType = projectType.ProjectTypeFeatures.Select(x => new Feature()
+                {
+                    FeatureId = x.Feature.FeatureId,
+                    FeatureText = x.Feature.FeatureText
+                });
+                foreach (var item in retrievedFeatures)
+                {
+                    itemsInSelectList.Add(new SelectListItem
+                    {
+                        Value = item.FeatureId.ToString(),
+                        Text = item.FeatureText,
+                        Selected = AllFeaturesInprojectType.Select(x => x.FeatureId).Contains(item.FeatureId)
+                    });
+                }
+
                 if (!ModelState.IsValid)
                 {
                     vm.Features = itemsInSelectList;
                     return View(vm);
-                }
-
-                if(projectType == null)
-                {
-                    return RedirectToAction("Index");
                 }
 
                 // update according to the View Model
@@ -307,6 +338,13 @@ namespace iWriter.Controllers
                 featureUnitOfWorkRepository.Save();
                 actionFeedback.SuccessUnsuccess = true;
                 return RedirectToAction("index");
+            }
+
+            catch (ProjectTypeNotFoundException ex)
+            {
+                actionFeedback.SuccessUnsuccess = false;
+                logger.LogError(ex, $"User {User.Identity.Name} requested ProjectTypeId: {ex.ProjectTypeId}. Project Type not found.");
+                return RedirectToAction("Index");
             }
 
             catch

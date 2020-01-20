@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -21,6 +22,7 @@ namespace iWriter.Areas.Identity.Data
         public DateTime JoinDate { get; set; }
         public DateTime LastLogin { get; set; }
 
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal AccountBalance { get; set; }
 
         // project related properties
