@@ -1,13 +1,12 @@
 ﻿@model iWriter.ViewModels.ProjectTypeViewModels.ProjectTypeViewModel
 
 @{
-    ViewData["Title"] = "DeleteProjectType";
+    ViewData["Title"] = "ProjectTypeDetails";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Delete Project Type</h1>
+<h1>Project Type Details</h1>
 
-<h3>Are you sure you want to delete this?</h3>
 <div>
     <hr />
     <dl class="row">
@@ -42,9 +41,8 @@
             @Html.DisplayFor(model => model.DaysToDeliver)
         </dd>
     </dl>
-    
-    <form asp-action="DeleteProjectTypePost" asp-route-id="@Model.ProjectTypeId">
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+</div>
+<div>
+    @Html.ActionLink("Edit", "EditProjectType", new { id = Model.ProjectTypeId }) |
+    <a asp-action="Index">Back to List</a>
 </div>

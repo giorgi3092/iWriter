@@ -62,6 +62,7 @@ namespace iWriter.Controllers
             return PartialView(vm);
         }
 
+        [HttpGet]
         public IActionResult CreateFeatures()
         {
             return PartialView();
@@ -90,6 +91,7 @@ namespace iWriter.Controllers
             return View();
         }
 
+        [HttpGet]
         public async Task<IActionResult> FeatureDetails(int id)
         {
             var model = await featureUnitOfWorkRepository.featureRepository.GetFeature(id);
@@ -97,6 +99,7 @@ namespace iWriter.Controllers
             return View(vm);
         }
 
+        [HttpGet]
         public async Task<IActionResult> EditFeature(int id)
         {
             var model = await featureUnitOfWorkRepository.featureRepository.GetFeature(id);
@@ -337,20 +340,22 @@ namespace iWriter.Controllers
 
                 featureUnitOfWorkRepository.Save();
                 actionFeedback.SuccessUnsuccess = true;
+                logger.LogInformation($"A Project Type with Id: {projectType.ProjectTypeId} was successfully edited");
                 return RedirectToAction("index");
             }
 
             catch (ProjectTypeNotFoundException ex)
             {
                 actionFeedback.SuccessUnsuccess = false;
-                logger.LogError(ex, $"User {User.Identity.Name} requested ProjectTypeId: {ex.ProjectTypeId}. {ex.Message}");
+                logger.LogError(ex, $"Unsuccessful operation. User {User.Identity.Name} requested ProjectTypeId: {ex.ProjectTypeId}. {ex.Message}");
                 return RedirectToAction("Index");
             }
 
-            catch
+            catch(Exception ex)
             {
                 vm.Features = itemsInSelectList;
-                ModelState.AddModelError(string.Empty, "A strange error occured. Try again later.");
+                ModelState.AddModelError(string.Empty, "Unsuccessful operation. A strange error occured. Try again later.");
+                logger.LogError(ex, $"Unsuccessful operation. User {User.Identity.Name} requested ProjectTypeId: {vm.ProjectTypeId}. The task was unsuccessful. Message: {ex.Message}");
                 return View(vm);
             }
         }
@@ -376,27 +381,54 @@ namespace iWriter.Controllers
                     throw new ProjectTypeNotFoundException("Project Type Id not found.", id);
                 }
 
-                await featureUnitOfWorkRepository.featureRepository.Delete(projectType.ProjectTypeId);
+                await featureUnitOfWorkRepository.projectTypeRepository.Delete(projectType.ProjectTypeId);
                 featureUnitOfWorkRepository.Save();
                 actionFeedback.SuccessUnsuccess = true;
+                logger.LogInformation($"A Project Type with Id: {projectType.ProjectTypeId} was successfully deleted");
                 return RedirectToAction("Index");
             }
 
             catch(ProjectTypeNotFoundException ex)
             {
                 actionFeedback.SuccessUnsuccess = false;
-                logger.LogError(ex, $"User {User.Identity.Name} requested deletion of ProjectTypeId: {ex.ProjectTypeId}. {ex.Message}");
+                logger.LogError(ex, $"Unsuccessful operation. User {User.Identity.Name} requested deletion of ProjectTypeId: {ex.ProjectTypeId}. {ex.Message}");
                 return RedirectToAction("Index");
             }
 
             catch(Exception ex)
             {
                 actionFeedback.SuccessUnsuccess = false;
-                logger.LogError(ex, $"User {User.Identity.Name} requested deletion of ProjectTypeId: . {ex.Message}");
+                logger.LogError(ex, $"Unsuccessful operation. User {User.Identity.Name} requested deletion of ProjectTypeId: . {ex.Message}");
                 return RedirectToAction("Index");
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ProjectTypeDetails(int id)
+        {
+            try
+            {
+                var projectType = await featureUnitOfWorkRepository.projectTypeRepository.GetProjectType(id);
+                if (projectType == null)
+                {
+                    throw new ProjectTypeNotFoundException("Project Type Id not found.", id);
+                }
+                var vm = mapper.Map<ProjectTypeViewModel>(projectType);
+                return View(vm);
+            }
+            catch (ProjectTypeNotFoundException ex)
+            {
+                actionFeedback.SuccessUnsuccess = false;
+                logger.LogError(ex, $"Unsuccessful operation. User {User.Identity.Name} requested details of ProjectTypeId: {ex.ProjectTypeId}. Message: {ex.Message}");
+                return RedirectToAction("Index");
+            }
+            catch(Exception ex)
+            {
+                actionFeedback.SuccessUnsuccess = false;
+                logger.LogError(ex, $"Unsuccessful operation. User {User.Identity.Name} requested details of ProjectTypeId: {id}. Message: {ex.Message}");
+                return RedirectToAction("Index");
+            }
+        }
 
         /********************************* Actions for Tab Action Views ************************************/
         [HttpGet]
@@ -431,7 +463,8 @@ namespace iWriter.Controllers
         [HttpGet]
         public IActionResult ProjectManagement()
         {
-            return PartialView();
+            var ProjectTypes = featureUnitOfWorkRepository.projectTypeRepository.GetAllProjectTypes();
+            return PartialView(ProjectTypes);
         }
     }
 }

@@ -11,7 +11,9 @@ namespace iWriter.Models
     {
         public int FeatureId { get; set; }
 
+        [Required]
         [Display(Name = "Feature text")]
+        [MaxLength(100, ErrorMessage = "Feature text must be less then {1} characters")]
         public string FeatureText { get; set; }
 
         public IList<ProjectTypeFeature> ProjectTypeFeatures { get; set; }

@@ -1,4 +1,5 @@
 ﻿@inject IActionFeedback actionFeedback
+@model IEnumerable<ProjectType>
 
 @{
     if (actionFeedback.SuccessUnsuccess == false)
@@ -10,13 +11,52 @@
     else if (actionFeedback.SuccessUnsuccess == true)
     {
         <div class="alert alert-success" role="alert">
-                    Successful Operation
+            Successful Operation
         </div>
     }
 
     // reset the action feedback to null
     actionFeedback.SuccessUnsuccess = null;
 }
+<br>
+
+<h4 style="text-align:center">Project Types Preview</h4>
+
+@if (Model.Any())
+{
+    <div class="card-deck mb-3 text-center">
+
+        @foreach (var projectType in Model)
+        {
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">@projectType.ProjectTypeName</h4>
+                </div>
+                <div class="card-body">
+                    <h1 class="card-title pricing-card-title">$@projectType.Rate <small class="text-muted">/ 100 words</small></h1>
+                    <ul class="list-group mt-3 mb-4">
+                        <li class="list-group-item">@projectType.StarQuality Stars Quality</li>
+                        @foreach (var item in projectType.ProjectTypeFeatures)
+                        {
+                            <li class="list-group-item">* @item.Feature.FeatureText</li>
+                        }
+                    </ul>
+                    <button type="button" class="btn btn-lg btn-block btn-outline-primary">Sign up for free</button>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p style="text-align:center">None at the moment. Please add new project types below.</p>
+}
+
+
+
+
+
+<br>
 <h3>Features</h3>
 <div id="projectFeaturesIndex"></div>
 <div id="projectFeaturesCreate"></div>
@@ -29,4 +69,5 @@
     $('#projectFeaturesCreate').load("/WritingCenter/CreateFeatures");
     $('#projectTypeIndex').load("/WritingCenter/GetAllProjectTypes");
     $('#projectTypeCreate').load("/WritingCenter/CreateProjectType");
+    
 </script>

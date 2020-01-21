@@ -40,7 +40,7 @@ namespace iWriter.Repositories.Feature
 
         public IEnumerable<ProjectType> GetAllProjectTypes()
         {
-            return _iWriterContext.ProjectTypes;
+            return _iWriterContext.ProjectTypes.Include("ProjectTypeFeatures.Feature");
         }
 
         public async Task<ProjectType> GetProjectType(int Id)

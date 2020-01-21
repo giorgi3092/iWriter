@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using iWriter.Models;
 
 namespace iWriter.Migrations
 {
     [DbContext(typeof(iWriterContext))]
-    partial class iWriterContextModelSnapshot : ModelSnapshot
+    [Migration("20200121114039_AddedMaxLenOnFeatureTextinFeatureModel")]
+    partial class AddedMaxLenOnFeatureTextinFeatureModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -37,6 +37,7 @@ namespace iWriter.ViewModels.ProjectTypeViewModels
         public IList<SelectListItem> Features { get; set; }
 
 
+        [Display(Name = "Select Features")]
         public string[] SelectedFeatures { get; set; }
     }
 }
