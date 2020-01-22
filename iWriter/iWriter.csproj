@@ -18,6 +18,8 @@
     <Compile Remove="Migrations\20200116120326_UpdateLittleChanges.Designer.cs" />
     <Compile Remove="Migrations\20200120125650_slightModelVariation.cs" />
     <Compile Remove="Migrations\20200120125650_slightModelVariation.Designer.cs" />
+    <Compile Remove="Migrations\20200122073408_FeatureTexMaxLength.cs" />
+    <Compile Remove="Migrations\20200122073408_FeatureTexMaxLength.Designer.cs" />
   </ItemGroup>
 
 

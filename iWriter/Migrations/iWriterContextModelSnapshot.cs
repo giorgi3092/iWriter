@@ -291,6 +291,10 @@ namespace iWriter.Migrations
                     b.Property<int>("ArticleQuantity")
                         .HasColumnType("int");
 
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(150)")
+                        .HasMaxLength(150);
+
                     b.Property<string>("GeneralTopic")
                         .IsRequired()
                         .HasColumnType("nvarchar(30)")
@@ -309,27 +313,17 @@ namespace iWriter.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
+                    b.Property<int>("ProjectTypeId")
+                        .HasColumnType("int");
+
                     b.Property<int>("WordCount")
                         .HasColumnType("int");
 
                     b.HasKey("ProjectId");
 
-                    b.ToTable("Projects");
-                });
-
-            modelBuilder.Entity("iWriter.Models.ProjectProjectType", b =>
-                {
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProjectTypeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ProjectId", "ProjectTypeId");
-
                     b.HasIndex("ProjectTypeId");
 
-                    b.ToTable("ProjectProjectTypes");
+                    b.ToTable("Projects");
                 });
 
             modelBuilder.Entity("iWriter.Models.ProjectType", b =>
@@ -424,16 +418,10 @@ namespace iWriter.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("iWriter.Models.ProjectProjectType", b =>
+            modelBuilder.Entity("iWriter.Models.Project", b =>
                 {
-                    b.HasOne("iWriter.Models.Project", "Project")
-                        .WithMany("ProjectProjectType")
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("iWriter.Models.ProjectType", "ProjectType")
-                        .WithMany("ProjectProjectType")
+                        .WithMany("Projects")
                         .HasForeignKey("ProjectTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

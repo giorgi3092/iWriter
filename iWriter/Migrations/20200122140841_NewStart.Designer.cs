@@ -10,8 +10,8 @@ using iWriter.Models;
 namespace iWriter.Migrations
 {
     [DbContext(typeof(iWriterContext))]
-    [Migration("20200110085834_FullProjectModelUpdated")]
-    partial class FullProjectModelUpdated
+    [Migration("20200122140841_NewStart")]
+    partial class NewStart
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -165,7 +165,7 @@ namespace iWriter.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("AccountBalance")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<string>("AccountManagerID")
                         .HasColumnType("nvarchar(max)");
@@ -274,7 +274,9 @@ namespace iWriter.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("FeatureText")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
 
                     b.HasKey("FeatureId");
 
@@ -290,6 +292,10 @@ namespace iWriter.Migrations
 
                     b.Property<int>("ArticleQuantity")
                         .HasColumnType("int");
+
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(150)")
+                        .HasMaxLength(150);
 
                     b.Property<string>("GeneralTopic")
                         .IsRequired()
@@ -309,27 +315,17 @@ namespace iWriter.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
+                    b.Property<int>("ProjectTypeId")
+                        .HasColumnType("int");
+
                     b.Property<int>("WordCount")
                         .HasColumnType("int");
 
                     b.HasKey("ProjectId");
 
-                    b.ToTable("Projects");
-                });
-
-            modelBuilder.Entity("iWriter.Models.ProjectProjectType", b =>
-                {
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProjectTypeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ProjectId", "ProjectTypeId");
-
                     b.HasIndex("ProjectTypeId");
 
-                    b.ToTable("ProjectProjectTypes");
+                    b.ToTable("Projects");
                 });
 
             modelBuilder.Entity("iWriter.Models.ProjectType", b =>
@@ -348,7 +344,7 @@ namespace iWriter.Migrations
                         .HasMaxLength(50);
 
                     b.Property<decimal>("Rate")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<float>("StarQuality")
                         .HasColumnType("real");
@@ -378,7 +374,7 @@ namespace iWriter.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -387,7 +383,7 @@ namespace iWriter.Migrations
                     b.HasOne("iWriter.Areas.Identity.Data.iWriterUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -396,7 +392,7 @@ namespace iWriter.Migrations
                     b.HasOne("iWriter.Areas.Identity.Data.iWriterUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -405,13 +401,13 @@ namespace iWriter.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("iWriter.Areas.Identity.Data.iWriterUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -420,37 +416,31 @@ namespace iWriter.Migrations
                     b.HasOne("iWriter.Areas.Identity.Data.iWriterUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("iWriter.Models.ProjectProjectType", b =>
+            modelBuilder.Entity("iWriter.Models.Project", b =>
                 {
-                    b.HasOne("iWriter.Models.Project", "Project")
-                        .WithMany("ProjectProjectType")
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("iWriter.Models.ProjectType", "ProjectType")
-                        .WithMany("ProjectProjectType")
+                        .WithMany("Projects")
                         .HasForeignKey("ProjectTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("iWriter.Models.ProjectTypeFeature", b =>
                 {
                     b.HasOne("iWriter.Models.Feature", "Feature")
-                        .WithMany("ProjectTypeFeature")
+                        .WithMany("ProjectTypeFeatures")
                         .HasForeignKey("FeatureId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("iWriter.Models.ProjectType", "ProjectType")
-                        .WithMany("ProjectTypeFeature")
+                        .WithMany("ProjectTypeFeatures")
                         .HasForeignKey("ProjectTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

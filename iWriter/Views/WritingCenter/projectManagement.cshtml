@@ -19,43 +19,7 @@
     actionFeedback.SuccessUnsuccess = null;
 }
 <br>
-
-<h4 style="text-align:center">Project Types Preview</h4>
-
-@if (Model.Any())
-{
-    <div class="card-deck mb-3 text-center">
-
-        @foreach (var projectType in Model)
-        {
-            <div class="card mb-4 shadow-sm">
-                <div class="card-header">
-                    <h4 class="my-0 font-weight-normal">@projectType.ProjectTypeName</h4>
-                </div>
-                <div class="card-body">
-                    <h1 class="card-title pricing-card-title">$@projectType.Rate <small class="text-muted">/ 100 words</small></h1>
-                    <ul class="list-group mt-3 mb-4">
-                        <li class="list-group-item">@projectType.StarQuality Stars Quality</li>
-                        @foreach (var item in projectType.ProjectTypeFeatures)
-                        {
-                            <li class="list-group-item">* @item.Feature.FeatureText</li>
-                        }
-                    </ul>
-                    <button type="button" class="btn btn-lg btn-block btn-outline-primary">Sign up for free</button>
-                </div>
-            </div>
-        }
-    </div>
-}
-else
-{
-    <p style="text-align:center">None at the moment. Please add new project types below.</p>
-}
-
-
-
-
-
+<div id="projectTypesPreview"></div>
 <br>
 <h3>Features</h3>
 <div id="projectFeaturesIndex"></div>
@@ -65,9 +29,34 @@ else
 
 
 <script>
-    $('#projectFeaturesIndex').load("/WritingCenter/GetAllProjectFeatures");
-    $('#projectFeaturesCreate').load("/WritingCenter/CreateFeatures");
-    $('#projectTypeIndex').load("/WritingCenter/GetAllProjectTypes");
-    $('#projectTypeCreate').load("/WritingCenter/CreateProjectType");
-    
+    $('#projectTypesPreview').load("/WritingCenter/ProjectTypesPreview", function( response, status, xhr ) {
+    if ( status == "error" ) {
+        var msg = "Sorry but there was an error loading project type previews: ";
+        $( "#projectTypesPreview" ).html( msg + xhr.status + " " + xhr.statusText );
+    }
+    });
+    $('#projectFeaturesIndex').load("/WritingCenter/GetAllProjectFeatures", function( response, status, xhr ) {
+    if ( status == "error" ) {
+        var msg = "Sorry but there was an error loading the list of features: ";
+        $( "#projectTypesPreview" ).html( msg + xhr.status + " " + xhr.statusText );
+    }
+    });
+    $('#projectFeaturesCreate').load("/WritingCenter/CreateFeatures", function( response, status, xhr ) {
+    if ( status == "error" ) {
+        var msg = "Sorry but there was an error loading the project feature creation form: ";
+        $( "#projectTypesPreview" ).html( msg + xhr.status + " " + xhr.statusText );
+    }
+    });
+    $('#projectTypeIndex').load("/WritingCenter/GetAllProjectTypes", function( response, status, xhr ) {
+    if ( status == "error" ) {
+        var msg = "Sorry but there was an error loading the list of project types: ";
+        $( "#projectTypesPreview" ).html( msg + xhr.status + " " + xhr.statusText );
+    }
+    });
+    $('#projectTypeCreate').load("/WritingCenter/CreateProjectType", function( response, status, xhr ) {
+    if ( status == "error" ) {
+        var msg = "Sorry but there was an error loading the project type creation form: ";
+        $( "#projectTypesPreview" ).html( msg + xhr.status + " " + xhr.statusText );
+    }
+    });
 </script>

@@ -11,17 +11,17 @@ namespace iWriter.Models
         public int ProjectId { get; set; }
 
         [Required]
-        [MaxLength(50, ErrorMessage = "Project name cannot exceed {0} characters")]
+        [MaxLength(50, ErrorMessage = "{0} cannot exceed {1} characters")]
         [Display(Name = "Project Name")]
         public string ProjectName { get; set; }
 
         [Required]
-        [MaxLength(30, ErrorMessage = "General topic cannot exceed {0} characters")]
+        [MaxLength(30, ErrorMessage = "{0} cannot exceed {1} characters")]
         [Display(Name = "General Topic")]
         public string GeneralTopic { get; set; }
 
         [Required]
-        [MaxLength(10000, ErrorMessage = "Project details cannot exceed {0} characters")]
+        [MaxLength(10000, ErrorMessage = "{0} cannot exceed {1} characters")]
         [Display(Name = "Project details")]
         public string ProjectDetails { get; set; }
 
@@ -37,6 +37,11 @@ namespace iWriter.Models
         [Display(Name = "Word Count")]
         public int WordCount { get; set; }
 
-        public IList<ProjectProjectType> ProjectProjectType { get; set; }
+        [Display(Name = "File Path")]
+        [MaxLength(150, ErrorMessage = "{0} must be less than {1} characters long. Rename the file so that it has less characters.")]
+        public string FilePath { get; set; }
+
+        public int ProjectTypeId { get; set; }
+        public ProjectType ProjectType { get; set; }
     }
 }

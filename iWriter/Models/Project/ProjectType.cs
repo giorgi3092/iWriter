@@ -38,6 +38,6 @@ namespace iWriter.Models
         // navigation properties
         public IList<ProjectTypeFeature> ProjectTypeFeatures { get; set; }
 
-        public IList<ProjectProjectType> ProjectProjectType { get; set; }
+        public IList<Project> Projects { get; set; }
     }
 }

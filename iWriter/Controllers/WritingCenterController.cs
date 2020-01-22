@@ -77,6 +77,7 @@ namespace iWriter.Controllers
                 var model = mapper.Map<Feature>(createFeatureViewModel);
                 featureUnitOfWorkRepository.featureRepository.Add(model);
                 featureUnitOfWorkRepository.Save();
+                actionFeedback.SuccessUnsuccess = true;
                 return RedirectToAction("Index", "WritingCenter");
             }
             catch (InvalidOperationException ex)
@@ -88,6 +89,7 @@ namespace iWriter.Controllers
                 logger.LogError("General Exception Thrown" + ex.Message);
             }
 
+            actionFeedback.SuccessUnsuccess = false;
             return View();
         }
 
@@ -118,6 +120,7 @@ namespace iWriter.Controllers
             var model = mapper.Map<Feature>(vm);
             await featureUnitOfWorkRepository.featureRepository.Update(model);
             featureUnitOfWorkRepository.Save();
+            actionFeedback.SuccessUnsuccess = true;
             return RedirectToAction("Index");
         }
 
@@ -135,6 +138,7 @@ namespace iWriter.Controllers
         {
             await featureUnitOfWorkRepository.featureRepository.Delete(id);
             featureUnitOfWorkRepository.Save();
+            actionFeedback.SuccessUnsuccess = true;
             return RedirectToAction("Index");
         }
 
@@ -430,6 +434,15 @@ namespace iWriter.Controllers
             }
         }
 
+        [HttpGet]
+        public IActionResult ProjectTypesPreview()
+        {
+            var ProjectTypes = featureUnitOfWorkRepository.projectTypeRepository.GetAllProjectTypes();
+            return PartialView(ProjectTypes);
+        }
+
+
+
         /********************************* Actions for Tab Action Views ************************************/
         [HttpGet]
         public async Task<IActionResult> Dashboard()
@@ -463,8 +476,7 @@ namespace iWriter.Controllers
         [HttpGet]
         public IActionResult ProjectManagement()
         {
-            var ProjectTypes = featureUnitOfWorkRepository.projectTypeRepository.GetAllProjectTypes();
-            return PartialView(ProjectTypes);
+            return PartialView();
         }
     }
 }

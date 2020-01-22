@@ -22,7 +22,7 @@
 @section Scripts {
     
     @{ 
-        
+
     }
     
     <script>
@@ -42,7 +42,10 @@
 
             $.get(loadurl, function(data) {
                 $(targ).html(data);
-            });
+            })
+                .fail(function () {
+                    $(targ).html("Tab failed to load");
+                });
             return false;
         });
 

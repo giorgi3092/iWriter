@@ -20,7 +20,6 @@ namespace iWriter.Models
         public DbSet<Feature> Features { get; set; }
         public DbSet<ProjectTypeFeature> ProjectTypeFeatures { get; set; }
         public DbSet<Project> Projects { get; set; }
-        public DbSet<ProjectProjectType> ProjectProjectTypes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -32,10 +31,13 @@ namespace iWriter.Models
             //  the entity ProjectTypeFeature has composite key made from ProjectTypeId and FeatureId
             builder.Entity<ProjectTypeFeature>().HasKey(sc => new { sc.ProjectTypeId, sc.FeatureId });
 
-            //  the entity ProjectProjectType has composite key made from ProjectId and ProjectTypeId
-            builder.Entity<ProjectProjectType>().HasKey(sc => new { sc.ProjectId, sc.ProjectTypeId });
+            //  Many Projects  <---|-  One Project Type
+            builder.Entity<Project>()
+                .HasOne(s => s.ProjectType)
+                .WithMany(s => s.Projects)
+                .HasForeignKey(s => s.ProjectTypeId);
 
-            //  set Cascade Referential Integrity to No Action
+            //  set Cascade Referential Integrity to Cascade
             foreach (var foreignKey in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             {
                 foreignKey.DeleteBehavior = DeleteBehavior.Cascade;

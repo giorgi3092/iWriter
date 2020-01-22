@@ -1,10 +1,9 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace iWriter.Data.Migrations
+namespace iWriter.Migrations
 {
-    public partial class CreateIdentitySchema : Migration
+    public partial class NewStart : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -40,7 +39,22 @@ namespace iWriter.Data.Migrations
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false)
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    AccountType = table.Column<int>(nullable: false),
+                    Profession = table.Column<string>(nullable: true),
+                    Website = table.Column<string>(nullable: true),
+                    Birthday = table.Column<DateTime>(nullable: false),
+                    JoinDate = table.Column<DateTime>(nullable: false),
+                    LastLogin = table.Column<DateTime>(nullable: false),
+                    AccountBalance = table.Column<decimal>(type: "decimal(18, 2)", nullable: false),
+                    NewProjectsCount = table.Column<int>(nullable: false),
+                    PendingProjectsCount = table.Column<int>(nullable: false),
+                    CompletedProjectsCount = table.Column<int>(nullable: false),
+                    LatestProjectID = table.Column<string>(nullable: true),
+                    AccountManagerID = table.Column<string>(nullable: true),
+                    TicketCount = table.Column<int>(nullable: false),
+                    TicketReplyCount = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -48,11 +62,40 @@ namespace iWriter.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Features",
+                columns: table => new
+                {
+                    FeatureId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FeatureText = table.Column<string>(maxLength: 100, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Features", x => x.FeatureId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProjectTypes",
+                columns: table => new
+                {
+                    ProjectTypeId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProjectTypeName = table.Column<string>(maxLength: 50, nullable: false),
+                    Rate = table.Column<decimal>(type: "decimal(18, 2)", nullable: false),
+                    StarQuality = table.Column<float>(nullable: false),
+                    DaysToDeliver = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjectTypes", x => x.ProjectTypeId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     RoleId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -73,7 +116,7 @@ namespace iWriter.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -153,6 +196,56 @@ namespace iWriter.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Projects",
+                columns: table => new
+                {
+                    ProjectId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProjectName = table.Column<string>(maxLength: 50, nullable: false),
+                    GeneralTopic = table.Column<string>(maxLength: 30, nullable: false),
+                    ProjectDetails = table.Column<string>(maxLength: 10000, nullable: false),
+                    KeywordDensity = table.Column<float>(nullable: false),
+                    ArticleQuantity = table.Column<int>(nullable: false),
+                    WordCount = table.Column<int>(nullable: false),
+                    FilePath = table.Column<string>(maxLength: 150, nullable: true),
+                    ProjectTypeId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Projects", x => x.ProjectId);
+                    table.ForeignKey(
+                        name: "FK_Projects_ProjectTypes_ProjectTypeId",
+                        column: x => x.ProjectTypeId,
+                        principalTable: "ProjectTypes",
+                        principalColumn: "ProjectTypeId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProjectTypeFeatures",
+                columns: table => new
+                {
+                    FeatureId = table.Column<int>(nullable: false),
+                    ProjectTypeId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjectTypeFeatures", x => new { x.ProjectTypeId, x.FeatureId });
+                    table.ForeignKey(
+                        name: "FK_ProjectTypeFeatures_Features_FeatureId",
+                        column: x => x.FeatureId,
+                        principalTable: "Features",
+                        principalColumn: "FeatureId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProjectTypeFeatures_ProjectTypes_ProjectTypeId",
+                        column: x => x.ProjectTypeId,
+                        principalTable: "ProjectTypes",
+                        principalColumn: "ProjectTypeId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -191,6 +284,16 @@ namespace iWriter.Data.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Projects_ProjectTypeId",
+                table: "Projects",
+                column: "ProjectTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectTypeFeatures_FeatureId",
+                table: "ProjectTypeFeatures",
+                column: "FeatureId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -211,10 +314,22 @@ namespace iWriter.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Projects");
+
+            migrationBuilder.DropTable(
+                name: "ProjectTypeFeatures");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Features");
+
+            migrationBuilder.DropTable(
+                name: "ProjectTypes");
         }
     }
 }
